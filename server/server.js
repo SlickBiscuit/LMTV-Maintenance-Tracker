@@ -5,8 +5,12 @@ const pool = require("./db")
 const app = express();
 const port = 3000
 
+const lmtvRouter = require("./routes/lmtvs");
+
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/lmtvs", lmtvRouter);
 
 app.get("/", async (req, res) => {
     try {
@@ -18,9 +22,9 @@ app.get("/", async (req, res) => {
     }
 });
 
-/*app.get("/", (req, res) => {
+app.get("/", (req, res) => {
     res.json("LMTV Maintenance API is running");
-}); */
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
