@@ -37,42 +37,56 @@ router.post("/", async (req, res) => {
     try {
         const {
             lmtv_id,
-            mechanic_id,
+            maintenance_type,
             description,
+            mileage,
+            date_completed,
             status
         } = req.body;
 
         const result = await pool.query(
             `
             INSERT INTO maintenance_records
-                (lmtv_id, mechanic_id, description, status)
+                (
+                    lmtv_id,
+                    maintenance_type,
+                    description,
+                    mileage,
+                    date_completed,
+                    status
+                )
             VALUES
-                ($1, $2, $3, $4)
+                ($1, $2, $3, $4, $5, $6)
             RETURNING *
             `,
             [
                 lmtv_id,
-                mechanic_id,
+                maintenance_type,
                 description,
+                mileage,
+                date_completed,
                 status
             ]
         );
 
-        res.status(201).json(result.rows[0]); //return first item in the array
+        res.status(201).json(result.rows[0]);
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: "Failed to create maintenance record"
+            error: error.message
         });
     }
 });
+
 
 router.put("/:id", async (req, res) => {
     try {
         const {
             lmtv_id,
-            mechanic_id,
+            maintenance_type,
             description,
+            mileage,
+            date_completed,
             status
         } = req.body;
 
@@ -81,16 +95,20 @@ router.put("/:id", async (req, res) => {
             UPDATE maintenance_records
             SET
                 lmtv_id = $1,
-                mechanic_id = $2,
+                maintenance_type = $2,
                 description = $3,
-                status = $4
-            WHERE id = $5
+                mileage = $4,
+                date_completed = $5,
+                status = $6
+            WHERE id = $7
             RETURNING *
             `,
             [
                 lmtv_id,
-                mechanic_id,
+                maintenance_type,
                 description,
+                mileage,
+                date_completed,
                 status,
                 req.params.id
             ]
@@ -100,10 +118,11 @@ router.put("/:id", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: "Failed to update maintenance record"
+            error: error.message
         });
     }
 });
+
 
 router.delete("/:id", async (req, res) => {
     try {
