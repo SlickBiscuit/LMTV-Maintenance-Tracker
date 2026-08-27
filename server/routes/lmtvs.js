@@ -4,7 +4,7 @@ const pool = require("../db");
 
 router.get("/", async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM lmtvs");
+        const result = await pool.query("SELECT * FROM lmtvs ORDER BY id ASC");
         res.json(result.rows);
     } catch (error) {
         console.error(error);
@@ -18,6 +18,12 @@ router.get("/:id", async (req, res) => {
             "SELECT * FROM lmtvs WHERE id = $1",
             [req.params.id]
         );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                error: "LMTV not found"
+            });
+        }
 
         res.json(result.rows[0]);
     } catch (error) {
