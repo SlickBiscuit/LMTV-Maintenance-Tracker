@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/units
+Content-Type: application/json
+
+{
+    "name": "Test Company",
+    "location": "Fort Bragg"
+}
